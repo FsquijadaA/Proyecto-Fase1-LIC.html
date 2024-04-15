@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokémon Bank - Acciones</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Logo del banco -->
+    <div class="text-center">
+      <img src="logo-pokemon-bank.png" alt="Logo Pokémon Bank" class="logo my-4">
+    </div>
+
+    <!-- Cabecera con nombre del usuario y número de cuenta -->
+    <div class="header mb-4">
+      <h2 class="mb-0">Bienvenido, [Nombre del Usuario]</h2>
+      <small>Número de cuenta: [Número]</small>
+    </div>
+
+    <!-- Menú de acciones secundarias con estilos distintivos y reordenados -->
+    <div class="action-menu">
+      <div class="list-group mb-3">
+        <a href="transacciones.html" class="list-group-item list-group-item-action special-action">Ver historial de transacciones</a>
+        <a href="Gráficos.html" class="list-group-item list-group-item-action special-action">Ver gráfico de transacciones</a>
+      </div>
+    </div>
+
+    <!-- Menú de acciones principales -->
+    <div class="action-menu">
+      <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#depositModal">Depositar</a>
+        <a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#withdrawModal">Retirar</a>
+        <a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#balanceModal">Consultar Saldo</a>
+        <a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#payServicesModal">Pagar Servicios</a>
+      </div>
+    </div>
+    
+    <!-- Botón de Cerrar Sesión con estilo más destacado y tamaño reducido -->
+    <div class="d-flex justify-content-center mt-3">
+      <a href="login.html" class="btn btn-danger btn-sm exit-button">Cerrar Sesión</a>
+    </div>
+
+  </div>
+   <!-- Modales para cada acción -->
+  <!-- Modal para Depositar -->
+<div class="modal fade" id="depositModal" tabindex="-1" role="dialog" aria-labelledby="depositModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="depositModalLabel">Depositar</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="deposit-form">
+            <div class="form-group">
+              <label for="depositAmount">Cantidad a depositar:</label>
+              <input type="number" class="form-control" id="depositAmount" placeholder="Ingresa la cantidad" min="0">
+            </div>
+            <button type="submit" class="btn btn-primary">Realizar Depósito</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal para Retirar -->
+  <div class="modal fade" id="withdrawModal" tabindex="-1" role="dialog" aria-labelledby="withdrawModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="withdrawModalLabel">Retirar</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="withdraw-form">
+            <div class="form-group">
+              <label for="withdrawAmount">Cantidad a retirar:</label>
+              <input type="number" class="form-control" id="withdrawAmount" placeholder="Ingresa la cantidad" min="0">
+            </div>
+            <button type="submit" class="btn btn-primary">Realizar Retiro</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal para Consultar Saldo -->
+  <div class="modal fade" id="balanceModal" tabindex="-1" role="dialog" aria-labelledby="balanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="balanceModalLabel">Consulta de Saldo</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Tu saldo actual es: <strong id="currentBalance">$0.00</strong> <!-- Este valor se actualizaría con JavaScript -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal para Pagar Servicios -->
+  <div class="modal fade" id="payServicesModal" tabindex="-1" role="dialog" aria-labelledby="payServicesModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="payServicesModalLabel">Pago de Servicios</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="services-payment-form">
+            <div class="form-group">
+              <label for="serviceType">Tipo de servicio:</label>
+              <select class="form-control" id="serviceType">
+                <option value="electricity">Energía Eléctrica</option>
+                <option value="internet">Internet</option>
+                <option value="phone">Telefonía</option>
+                <option value="water">Agua Potable</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="paymentAmount">Cantidad a pagar:</label>
+              <input type="number" class="form-control" id="paymentAmount" placeholder="Ingresa la cantidad" min="0">
+            </div>
+            <button type="submit" class="btn btn-primary">Realizar Pago</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap y jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+ 
+  
+  
+  

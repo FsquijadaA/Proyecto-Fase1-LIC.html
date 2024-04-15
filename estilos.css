@@ -1,0 +1,88 @@
+/* estilos.css */
+body {
+    background-color: #f7f7f7;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .container {
+    padding-top: 2rem;
+  }
+  
+  /* Logo del banco */
+  .logo {
+    max-width: 300px; /* Tamaño del logo */
+    display: block;
+    margin: 0 auto;
+  }
+  
+  /* Estilos de la cabecera */
+  .header {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  /* Estilos del menú de acciones */
+  .action-menu {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Estilo para los botones de acciones secundarias */
+.special-action {
+    background-color: #f8f9fa; /* Un color de fondo ligeramente diferente */
+    border-left: 5px solid #007bff; /* Un borde a la izquierda con color distintivo */
+    margin-bottom: 1rem; /* Espacio debajo del botón */
+  }
+
+/* Estilos para el botón de Cerrar Sesión */
+.exit-button {
+    background-color: #dc3545; /* Rojo más intenso */
+    border-color: #dc3545; /* Borde del mismo color */
+    color: white; /* Texto blanco para mayor legibilidad */
+    padding: 0.25rem 0.5rem; /* Padding reducido para un botón más pequeño */
+  }
+  
+  .list-group-item {
+    margin-bottom: 10px; /* Espacio entre botones */
+    border-radius: 0.25rem; /* Bordes redondeados */
+  }
+  
+  /* Modales */
+  .modal-content {
+    padding: 1rem;
+  }
+  
+  .modal-header {
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .modal-footer {
+    border-top: 1px solid #e9ecef;
+  }
+  
+  .modal-title {
+    font-weight: bold;
+  }
+  
+  /* Botones */
+  .btn-primary {
+    background-color: #007bff; /* Color azul para los botones principales */
+    border: none;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d; /* Color gris para botones secundarios */
+    border: none;
+  }
+  
+  /* Adaptaciones para dispositivos pequeños */
+  @media (max-width: 768px) {
+    .header h2 {
+      font-size: 1.5rem;
+    }
+  
+    .list-group-item {
+      padding: 0.75rem 1.25rem; /* Ajuste de padding para elementos de la lista en dispositivos móviles */
+    }
+  }
+  
