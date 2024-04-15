@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Pokémon Bank</title>
-  <!-- Bootstrap CSS -->
+  <!-- Librería Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   <style>
     body {
@@ -61,10 +61,9 @@
       
       var pin = document.getElementById('userPin').value;
       if(pin.length === 4) {
-        // Aquí podrías añadir la lógica adicional de login o simplemente enviar el formulario
+        //mensaje de éxito para ingreso de credenciales
         console.log('PIN correcto, continuar con el login');
-        // window.location.href = 'acciones.html'; // Redireccionar a la página de acciones
-      } else {
+        } else {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
