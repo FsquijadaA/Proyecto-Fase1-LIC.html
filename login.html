@@ -38,20 +38,42 @@
         <img src="logo-pokemon-bank.png" alt="Logo Pokémon Bank" class="logo mb-3">
       </div>
       <!-- Formulario de login -->
-      <div class="login-container">
-        <form id="loginForm" action="acciones.html" method="GET"> <!-- Añade la acción apuntando a tu página de Acciones -->
-          <div class="form-group">
-            <label for="username">Nombre de Usuario:</label>
-            <input type="text" class="form-control" id="username" placeholder="Ingresa tu nombre de usuario" required>
-          </div>
-          <div class="form-group">
-            <label for="userPin">PIN (4 dígitos):</label>
-            <input type="password" class="form-control" id="userPin" maxlength="4" placeholder="Ingresa tu PIN" required>
-          </div>
-          <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
-        </form>
-      </div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Nombre de Usuario:</label>
+          <input type="text" class="form-control" id="username" placeholder="Ingresa tu nombre de usuario" required>
+        </div>
+        <div class="form-group">
+          <label for="userPin">PIN (4 dígitos):</label>
+          <input type="password" class="form-control" id="userPin" maxlength="4" placeholder="Ingresa tu PIN" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
+      </form>
+    </div>
   </div>
+
+  <!-- Biblioteca para Sweet alert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault(); // Evita el envío del formulario
+      
+      var pin = document.getElementById('userPin').value;
+      if(pin.length === 4) {
+        // Aquí podrías añadir la lógica adicional de login o simplemente enviar el formulario
+        console.log('PIN correcto, continuar con el login');
+        // window.location.href = 'acciones.html'; // Redireccionar a la página de acciones
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'El PIN debe contener 4 dígitos!'
+        });
+      }
+    });
+  </script>
+
   <!-- jQuery primero, luego Popper.js, luego Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js/dist/umd/popper.min.js"></script>
