@@ -54,20 +54,76 @@
 
   <!-- Biblioteca para Sweet alert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+  <!-- Biblioteca para Validate.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
+ 
+  <!-- Validación para carácteres especiales y números en el campo de usuario -->
   <script>
+    document.getElementById('username').addEventListener('input', function(e) {
+      var value = e.target.value;
+      e.target.value = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+    });
+
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault(); // Evita el envío del formulario
-      
-      var pin = document.getElementById('userPin').value;
-      if(pin.length === 4) {
-        //mensaje de éxito para ingreso de credenciales
-        console.log('PIN correcto, continuar con el login');
-        } else {
+
+      var constraints = {
+        username: {
+          presence: {
+            allowEmpty: false,
+            message: "^El nombre de usuario es obligatorio"
+          },
+          length: {
+            minimum: 3,
+            message: "^El nombre de usuario debe tener al menos 3 caracteres"
+          }
+        }
+      };
+
+      var form = document.getElementById('loginForm');
+      var formValues = {
+        username: form.username.value
+      };
+
+      var errors = validate(formValues, constraints);
+      if (errors) {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: 'El PIN debe contener 4 dígitos!'
+          text: errors.username.join(', ')
+        });
+        return;
+      }
+
+      var username = document.getElementById('username').value;
+      var pin = document.getElementById('userPin').value;
+
+      // Datos de acceso
+      var validUsername = "Ash Ketchum";
+      var validPin = "1234";
+      var accountNumber = "0987654321";
+      var initialBalance = 500.00;
+
+      if(username === validUsername && pin === validPin) {
+        // Guardar los datos en localStorage y redirigir a "acciones.html"
+        localStorage.setItem('username', validUsername);
+        localStorage.setItem('accountNumber', accountNumber);
+        localStorage.setItem('balance', initialBalance.toString());
+        
+        Swal.fire({
+          icon: 'success',
+          title: 'Ingreso Exitoso',
+          text: 'Bienvenido a Pokémon Bank',
+          timer: 1000,
+          showConfirmButton: false
+        }).then(function() {
+          window.location.href = "acciones.html";
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Acceso Denegado',
+          text: 'Nombre de usuario o PIN incorrectos'
         });
       }
     });

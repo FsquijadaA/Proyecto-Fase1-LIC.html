@@ -18,15 +18,15 @@
 
     <!-- Cabecera con nombre del usuario y número de cuenta -->
     <div class="header mb-4">
-      <h2 class="mb-0">Bienvenido, [Nombre del Usuario]</h2>
-      <small>Número de cuenta: [Número]</small>
+      <h2 class="mb-0">Bienvenido, <span id="userName"></span></h2>
+      <small>Número de cuenta: <span id="accountNumber"></span></small>
     </div>
 
     <!-- Menú de acciones secundarias con estilos distintivos y reordenados -->
     <div class="action-menu">
       <div class="list-group mb-3">
         <a href="transacciones.html" class="list-group-item list-group-item-action special-action">Ver historial de transacciones</a>
-        <a href="Gráficos.html" class="list-group-item list-group-item-action special-action">Ver gráfico de transacciones</a>
+        <a href="graficos.html" class="list-group-item list-group-item-action special-action">Ver gráfico de transacciones</a>
       </div>
     </div>
 
@@ -149,11 +149,176 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <!-- Biblioteca para SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Biblioteca para jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+
+  <script>
+    // Obtener los datos almacenados en el localStorage y mostrarlos en la página
+    document.addEventListener('DOMContentLoaded', function() {
+      var username = localStorage.getItem('username');
+      var accountNumber = localStorage.getItem('accountNumber');
+      var balance = localStorage.getItem('balance');
+
+      if (username) {
+        document.getElementById('userName').innerText = username;
+      }
+      if (accountNumber) {
+        document.getElementById('accountNumber').innerText = accountNumber;
+      }
+      if (balance) {
+        document.getElementById('currentBalance').innerText = `$${parseFloat(balance).toFixed(2)}`;
+      }
+    });
+
+    // Logo en base64 reducido
+    const logoBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...'; // Aquí va una cadena base64 más corta
+
+    // Función para descargar PDF usando jsPDF
+    function downloadPDF(transactionDetails) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Título
+      doc.setFontSize(18);
+      doc.text('Pokémon Bank', 105, 20, null, null, 'center');
+      doc.setFontSize(14);
+      doc.text('Comprobante de Transacción', 105, 30, null, null, 'center');
+
+      // Logo
+      doc.addImage(logoBase64, 'PNG', 10, 10, 30, 30);
+
+      // Detalles de la transacción
+      doc.setFontSize(12);
+      doc.text(transactionDetails, 10, 60);
+
+      // Fecha y hora
+      const date = new Date();
+      doc.text(`Fecha: ${date.toLocaleDateString()}`, 10, 80);
+      doc.text(`Hora: ${date.toLocaleTimeString()}`, 10, 90);
+
+      doc.save('transaction.pdf');
+    }
+
+    // Función para almacenar transacciones
+    function storeTransaction(type, amount) {
+      const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+      const date = new Date().toISOString();
+      transactions.push({ type, amount, date });
+      localStorage.setItem('transactions', JSON.stringify(transactions));
+    }
+
+    // Manejo del formulario de depósito
+    document.getElementById('deposit-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var amount = parseFloat(document.getElementById('depositAmount').value);
+      if (amount > 0) {
+        var balance = parseFloat(localStorage.getItem('balance')) + amount;
+        localStorage.setItem('balance', balance.toFixed(2));
+        document.getElementById('currentBalance').innerText = `$${balance.toFixed(2)}`;
+
+        storeTransaction('deposit', amount);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Depósito Exitoso',
+          text: `Has depositado $${amount.toFixed(2)}`,
+          showCancelButton: true,
+          confirmButtonText: 'Descargar Comprobante',
+          cancelButtonText: 'Cerrar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            downloadPDF(`Transacción: Depósito\nCantidad: $${amount.toFixed(2)}\nSaldo actual: $${balance.toFixed(2)}`);
+          }
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'La cantidad debe ser mayor a 0'
+        });
+      }
+    });
+
+    // Manejo del formulario de retiro
+    document.getElementById('withdraw-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var amount = parseFloat(document.getElementById('withdrawAmount').value);
+      var balance = parseFloat(localStorage.getItem('balance'));
+      if (amount > 0 && amount <= balance) {
+        balance -= amount;
+        localStorage.setItem('balance', balance.toFixed(2));
+        document.getElementById('currentBalance').innerText = `$${balance.toFixed(2)}`;
+
+        storeTransaction('withdraw', amount);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Retiro Exitoso',
+          text: `Has retirado $${amount.toFixed(2)}`,
+          showCancelButton: true,
+          confirmButtonText: 'Descargar Comprobante',
+          cancelButtonText: 'Cerrar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            downloadPDF(`Transacción: Retiro\nCantidad: $${amount.toFixed(2)}\nSaldo actual: $${balance.toFixed(2)}`);
+          }
+        });
+      } else if (amount > balance) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No tienes suficiente saldo'
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'La cantidad debe ser mayor a 0'
+        });
+      }
+    });
+
+    // Manejo del formulario de pago de servicios
+    document.getElementById('services-payment-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var amount = parseFloat(document.getElementById('paymentAmount').value);
+      var service = document.getElementById('serviceType').value;
+      var balance = parseFloat(localStorage.getItem('balance'));
+      if (amount > 0 && amount <= balance) {
+        balance -= amount;
+        localStorage.setItem('balance', balance.toFixed(2));
+        document.getElementById('currentBalance').innerText = `$${balance.toFixed(2)}`;
+
+        storeTransaction('payment', amount);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Pago Exitoso',
+          text: `Has pagado $${amount.toFixed(2)} por ${service}`,
+          showCancelButton: true,
+          confirmButtonText: 'Descargar Comprobante',
+          cancelButtonText: 'Cerrar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            downloadPDF(`Transacción: Pago de Servicio\nServicio: ${service}\nCantidad: $${amount.toFixed(2)}\nSaldo actual: $${balance.toFixed(2)}`);
+          }
+        });
+      } else if (amount > balance) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No tienes suficiente saldo'
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'La cantidad debe ser mayor a 0'
+        });
+      }
+    });
+  </script>
 </body>
 </html>
-
-
- 
-  
-  
-  
