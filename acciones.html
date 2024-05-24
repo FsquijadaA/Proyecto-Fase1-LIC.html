@@ -128,10 +128,10 @@
             <div class="form-group">
               <label for="serviceType">Tipo de servicio:</label>
               <select class="form-control" id="serviceType">
-                <option value="electricity">Energía Eléctrica</option>
+                <option value="electricidad">Energía Eléctrica</option>
                 <option value="internet">Internet</option>
-                <option value="phone">Telefonía</option>
-                <option value="water">Agua Potable</option>
+                <option value="telefono">Telefonía</option>
+                <option value="agua">Agua Potable</option>
               </select>
             </div>
             <div class="form-group">
@@ -172,9 +172,6 @@
       }
     });
 
-    // Logo en base64 reducido
-    const logoBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...'; // Aquí va una cadena base64 más corta
-
     // Función para descargar PDF usando jsPDF
     function downloadPDF(transactionDetails) {
       const { jsPDF } = window.jspdf;
@@ -186,26 +183,27 @@
       doc.setFontSize(14);
       doc.text('Comprobante de Transacción', 105, 30, null, null, 'center');
 
-      // Logo
-      doc.addImage(logoBase64, 'PNG', 10, 10, 30, 30);
-
       // Detalles de la transacción
       doc.setFontSize(12);
-      doc.text(transactionDetails, 10, 60);
+      let yPosition = 50;
+      transactionDetails.split('\n').forEach(line => {
+        doc.text(line, 105, yPosition, null, null, 'center');
+        yPosition += 10;
+      });
 
       // Fecha y hora
       const date = new Date();
-      doc.text(`Fecha: ${date.toLocaleDateString()}`, 10, 80);
-      doc.text(`Hora: ${date.toLocaleTimeString()}`, 10, 90);
+      doc.text(`Fecha: ${date.toLocaleDateString()}`, 105, yPosition, null, null, 'center');
+      doc.text(`Hora: ${date.toLocaleTimeString()}`, 105, yPosition + 10, null, null, 'center');
 
       doc.save('transaction.pdf');
     }
 
     // Función para almacenar transacciones
-    function storeTransaction(type, amount) {
+    function storeTransaction(type, amount, service = '') {
       const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
       const date = new Date().toISOString();
-      transactions.push({ type, amount, date });
+      transactions.push({ type, amount, date, service });
       localStorage.setItem('transactions', JSON.stringify(transactions));
     }
 
@@ -218,7 +216,7 @@
         localStorage.setItem('balance', balance.toFixed(2));
         document.getElementById('currentBalance').innerText = `$${balance.toFixed(2)}`;
 
-        storeTransaction('deposit', amount);
+        storeTransaction('Depósito', amount);
 
         Swal.fire({
           icon: 'success',
@@ -251,7 +249,7 @@
         localStorage.setItem('balance', balance.toFixed(2));
         document.getElementById('currentBalance').innerText = `$${balance.toFixed(2)}`;
 
-        storeTransaction('withdraw', amount);
+        storeTransaction('Retiro', amount);
 
         Swal.fire({
           icon: 'success',
@@ -291,7 +289,7 @@
         localStorage.setItem('balance', balance.toFixed(2));
         document.getElementById('currentBalance').innerText = `$${balance.toFixed(2)}`;
 
-        storeTransaction('payment', amount);
+        storeTransaction('Pago de Servicio', amount, service);
 
         Swal.fire({
           icon: 'success',
